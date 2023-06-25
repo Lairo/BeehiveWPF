@@ -17,7 +17,8 @@
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Job Assignment" FontSize="18" Margin="20,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+        <Label Content="Job Assignment" FontSize="18" Margin="20,0" 
+               HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
 
         <StackPanel Grid.Row="1" VerticalAlignment="Top" Margin="20">
             <ComboBox x:Name="jobSelector" FontSize="18" SelectedIndex="0" Margin="0,0,0,20">
@@ -30,10 +31,11 @@
 
         <Button Grid.Row="2" Content="Work the next shift" FontSize="18px" Click="WorkShift_Click" Margin="20"/>
 
-        <Label Content="Queen's Report" Grid.Column="1" FontSize="18px" Margin="20,0" HorizontalAlignment="Center"  VerticalAlignment="Bottom"/>
+        <Label Content="Queen's Report" Grid.Column="1" FontSize="18px"
+               Margin="20,0" HorizontalAlignment="Center"  VerticalAlignment="Bottom"/>
 
         <TextBox
             x:Name="statusReport" IsReadOnly="True"
-            Grid.Row="1"  Grid.RowSpan="2" Grid.Column="1" Margin="20" />
+            Grid.Row="1" Grid.RowSpan="2" Grid.Column="1" Margin="20"/>
     </Grid>
 </Window>

@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BeehiveWPF
+﻿namespace BeehiveWPF
 {
-    public class EggCare : Bee
+    class EggCare : Bee
     {
+        private const float CARE_PROGRESS_PER_SHIFT = 0.15f;
+
         public override float CostPerShift => 1.35f;
-        public EggCare(): base("Egg Carer") { }
+        
+        private Queen queen;
+        public EggCare(Queen queen) : base("Egg Carer")
+        {
+            this.queen = queen;
+        }
+
+        protected override void DoJob()
+        {
+            queen.CareForEggs(CARE_PROGRESS_PER_SHIFT);
+        }
     }
 }

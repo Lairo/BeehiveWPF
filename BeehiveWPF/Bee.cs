@@ -1,22 +1,22 @@
 ﻿namespace BeehiveWPF
 {
-    public class Bee
+    abstract class Bee
     {
-        public virtual float CostPerShift { get;}
+        public abstract float CostPerShift { get; }
         public string Job { get; private set; }
+        public Bee(string job)
+        {
+            Job = job;
+        }
 
         public void WorkTheNextShift()
         {
             if (HoneyVault.ConsumeHoney(CostPerShift))
+            {
                 DoJob();
-            
+            }
         }
 
-        public Bee(string Job)
-        {
-            Job = Job;
-        }
-
-        protected virtual void DoJob() { }
+        protected abstract void DoJob();
     }
 }

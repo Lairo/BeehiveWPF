@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BeehiveWPF
+﻿namespace BeehiveWPF
 {
-    public class HoneyManufacturer : Bee
+    class HoneyManufacturer : Bee
     {
-        public override float CostPerShift => 1.7f;
+        private const float NECTAR_PROCESSED_PER_SHIFT = 33.15f;
 
-        public HoneyManufacturer(): base("Honey Manufacturer") { }
+        public override float CostPerShift => 1.7f;
+        public HoneyManufacturer() : base("Honey Manufacturer") { }
+
+        protected override void DoJob()
+        {
+            HoneyVault.ConvertNectarToHoney(NECTAR_PROCESSED_PER_SHIFT);
+        }
     }
 }

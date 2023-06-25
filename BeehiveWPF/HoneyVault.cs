@@ -2,19 +2,11 @@
 {
     static class HoneyVault
     {
-        private static float honey = 25f;
-        private static float nectar = 100f;
-
         private const float NECTAR_CONVERSION_RATIO = .19f;
         private const float LOW_LEVEL_WARNING = 10f;
 
-        public static void ConvertNectarToHoney(float amount)
-        {
-            float nectarToConvert = amount;
-            if (nectarToConvert > nectar) _ = nectar;
-            nectar -= amount;
-            honey += amount * NECTAR_CONVERSION_RATIO;
-        }
+        private static float honey = 25f;
+        private static float nectar = 100f;
 
         public static void CollectNectar(float amount)
         {
@@ -22,12 +14,20 @@
             {
                 honey += amount;
             }
-
         }
+
+        public static void ConvertNectarToHoney(float amount)
+        {
+            float nectarToConvert = amount;
+            if (nectarToConvert > nectar) nectarToConvert = nectar;
+            nectar -= nectarToConvert;
+            honey += nectarToConvert * NECTAR_CONVERSION_RATIO;
+        }
+
 
         public static bool ConsumeHoney(float amount)
         {
-            if (amount > honey)
+            if (honey >= amount)
             {
                 honey -= amount;
                 return true;
@@ -47,10 +47,8 @@
                 {
                     warning += "\nLOW HONEY = ADD A HONEY MANUFACTURER";
                 }
-
                 return status + warning;
             }
         }
-
     }
 }

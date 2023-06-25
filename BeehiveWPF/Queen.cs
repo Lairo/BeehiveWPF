@@ -2,24 +2,39 @@
 
 namespace BeehiveWPF
 {
-    public class Queen : Bee
+    class Queen : Bee
     {
-        public override float CostPerShift => 2.15f;
-        private float eggs = 0;
-        private float unassignedWorkers = 3;
+        private const float EGGS_PER_SHIFT = 0.45f;
         private const float HONEY_PER_UNASSIGNED_WORKER = 0.5f;
-        private const float EGGS_PER_SHIFT = 0.45f;        
-        public string StatusReport { get; private set; }
-
 
         private Bee[] workers = new Bee[0];
+        private float eggs = 0;
+        private float unassignedWorkers = 3;
+        public override float CostPerShift => 2.15f;
+        public string StatusReport { get; private set; }
+
+        public Queen() : base("Queen")
+        {
+            AssignBee("Egg Carer");
+            AssignBee("Nectar Collector");
+            AssignBee("Honey Manufacturer");
+        }
+        private void AddWorker(Bee worker)
+        {
+            if (unassignedWorkers >= 1)
+            {
+                unassignedWorkers--;
+                Array.Resize(ref workers, workers.Length + 1);
+                workers[workers.Length - 1] = worker;
+            }
+        }
 
         public void AssignBee(string job)
         {
             switch (job)
             {
                 case "Egg Carer":
-                    AddWorker(new EggCare());
+                    AddWorker(new EggCare(this));
                     break;
                 case "Nectar Collector":
                     AddWorker(new NectarCollector());
@@ -31,18 +46,8 @@ namespace BeehiveWPF
             UpdateStatusReport();
         }
 
-        private void AddWorker(Bee worker)
-        {
-            if(unassignedWorkers >= 1)
-            {
-                unassignedWorkers--;
-                Array.Resize(ref workers, workers.Length + 1);
-                workers[workers.Length - 1] = worker;
-            }
-        }
-
         public void CareForEggs(float eggsToConvert)
-        {            
+        {
             if (eggs >= eggsToConvert)
             {
                 eggs -= eggsToConvert;
@@ -64,32 +69,20 @@ namespace BeehiveWPF
         protected override void DoJob()
         {
             eggs += EGGS_PER_SHIFT;
-            foreach(Bee worker in workers)
+            foreach (Bee worker in workers)
             {
                 worker.WorkTheNextShift();
             }
-
-            HoneyVault.ConsumeHoney(HONEY_PER_UNASSIGNED_WORKER * unassignedWorkers);
-            
+            HoneyVault.ConsumeHoney(unassignedWorkers * HONEY_PER_UNASSIGNED_WORKER );
+            UpdateStatusReport();
         }
 
         private void UpdateStatusReport()
         {
-            StatusReport = 
-                $"Vault Report: {HoneyVault.StatusReport}\n" +
-                $"Egg count: {eggs:0.0}\n" +
-                $"Unassigned workers: {unassignedWorkers:0.0}\n" +
-                $"{WorkerStatus("Egg Carer")} Nectar Collector bee\n" +
-                $"{WorkerStatus("Nectar Collector")} Honey Manufacturer bee" +
-                $"{WorkerStatus("Honey Manufacturer")} Egg Care bee" +
-                $"TOTAL WORKERS {workers.Length}" ;           
+            StatusReport = $"Vault report:\n{HoneyVault.StatusReport}\n" +
+            $"\nEgg count: {eggs:0.0}\nUnassigned workers: {unassignedWorkers:0.0}\n" +
+            $"{WorkerStatus("Nectar Collector")}\n{WorkerStatus("Honey Manufacturer")}" +
+            $"\n{WorkerStatus("Egg Care")}\nTOTAL WORKERS: {workers.Length}";
         }
-
-        public Queen() : base("Queen")
-        {   
-            AssignBee("Egg Carer");
-            AssignBee("Nectar Collector");
-            AssignBee("Honey Manufacturer");
-        }         
     }
 }
