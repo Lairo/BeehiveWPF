@@ -10,14 +10,14 @@ namespace BeehiveWPF
         private Bee[] workers = new Bee[0];
         private float eggs = 0;
         private float unassignedWorkers = 3;
-        public override float CostPerShift => 2.15f;
         public string StatusReport { get; private set; }
+        public override float CostPerShift { get { return 2.15f; } }
 
         public Queen() : base("Queen")
         {
-            AssignBee("Egg Carer");
             AssignBee("Nectar Collector");
             AssignBee("Honey Manufacturer");
+            AssignBee("Egg Carer");
         }
         private void AddWorker(Bee worker)
         {
@@ -28,22 +28,12 @@ namespace BeehiveWPF
                 workers[workers.Length - 1] = worker;
             }
         }
-
-        public void AssignBee(string job)
+        private void UpdateStatusReport()
         {
-            switch (job)
-            {
-                case "Egg Carer":
-                    AddWorker(new EggCare(this));
-                    break;
-                case "Nectar Collector":
-                    AddWorker(new NectarCollector());
-                    break;
-                case "Honey Manufacturer":
-                    AddWorker(new HoneyManufacturer());
-                    break;
-            }
-            UpdateStatusReport();
+            StatusReport = $"Vault report:\n{HoneyVault.StatusReport}\n" +
+            $"\nEgg count: {eggs:0.0}\nUnassigned workers: {unassignedWorkers:0.0}\n" +
+            $"{WorkerStatus("Nectar Collector")}\n{WorkerStatus("Honey Manufacturer")}" +
+            $"\n{WorkerStatus("Egg Carer")}\nTOTAL WORKERS: {workers.Length}";
         }
 
         public void CareForEggs(float eggsToConvert)
@@ -65,6 +55,22 @@ namespace BeehiveWPF
             if (count == 1) s = "";
             return $"{count} {job} bee{s}";
         }
+        public void AssignBee(string job)
+        {
+            switch (job)
+            {
+                case "Nectar Collector":
+                    AddWorker(new NectarCollector());
+                    break;
+                case "Honey Manufacturer":
+                    AddWorker(new HoneyManufacturer());
+                    break;
+                case "Egg Care":
+                    AddWorker(new EggCare(this));
+                    break;
+            }
+            UpdateStatusReport();
+        }
 
         protected override void DoJob()
         {
@@ -77,12 +83,5 @@ namespace BeehiveWPF
             UpdateStatusReport();
         }
 
-        private void UpdateStatusReport()
-        {
-            StatusReport = $"Vault report:\n{HoneyVault.StatusReport}\n" +
-            $"\nEgg count: {eggs:0.0}\nUnassigned workers: {unassignedWorkers:0.0}\n" +
-            $"{WorkerStatus("Nectar Collector")}\n{WorkerStatus("Honey Manufacturer")}" +
-            $"\n{WorkerStatus("Egg Care")}\nTOTAL WORKERS: {workers.Length}";
-        }
     }
 }

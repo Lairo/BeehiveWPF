@@ -10,10 +10,7 @@
 
         public static void CollectNectar(float amount)
         {
-            if (amount > 0f)
-            {
-                honey += amount;
-            }
+            if (amount > 0f) nectar += amount;
         }
 
         public static void ConvertNectarToHoney(float amount)
@@ -39,15 +36,14 @@
         {
             get
             {
-                string status = $"Honey: {honey:0.0}\nNectar: {nectar:0.0}. ";
-
-                string warning = "";
-
-                if (honey < LOW_LEVEL_WARNING || nectar < LOW_LEVEL_WARNING)
-                {
-                    warning += "\nLOW HONEY = ADD A HONEY MANUFACTURER";
-                }
-                return status + warning;
+                string status = $"{honey:0.0} units of honey\n" +
+                                $"{nectar:0.0} units of nectar";
+                string warnings = "";
+                if (honey < LOW_LEVEL_WARNING) warnings +=
+                                    "\nLOW HONEY - ADD A HONEY MANUFACTURER";
+                if (nectar < LOW_LEVEL_WARNING) warnings +=
+                                    "\nLOW NECTAR - ADD A NECTAR COLLECTOR";
+                return status + warnings;
             }
         }
     }
